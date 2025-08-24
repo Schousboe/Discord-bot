@@ -1,15 +1,13 @@
 {
-  "name": "nodejs",
+  "name": "discord-bot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Simple Discord bot with Welcome message and message function",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "@types/node": "^22.13.11"
+    "discord.js": "^14.14.1"
   }
 }
