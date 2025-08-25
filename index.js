@@ -1,4 +1,5 @@
 import { Client, GatewayIntentBits } from "discord.js";
+import express from "express";
 
 // Intents
 const client = new Client({
@@ -13,7 +14,7 @@ const client = new Client({
 // Token
 const TOKEN = process.env.DISCORD_TOKEN;
 
-// When bot is ready
+// When bot ready
 client.once("ready", () => {
   console.log(`✅ Logged in as ${client.user.tag}`);
 });
@@ -22,13 +23,25 @@ client.once("ready", () => {
 client.on("guildMemberAdd", (member) => {
   const channel = member.guild.systemChannel;
   if (channel) {
-    channel.send(`Welcome to the Dittogames cave, ${member}! 🎉
+    channel.send(`Welcome to the Ditogames cave, ${member}! 🎉
     Please read the rules and have fun!`);
   }
 });
 
+// Commands
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return; 
+
+  // Help
+  if (message.content === "!help") {
+    return message.reply(
+      "**Available commands:**\n" +
+      "`!help` – Shows this help menu.\n" +
+      "`!message` – Only a server manager can send a message through this bot."
+    );
+  }
+
+  // Message
   if (!message.content.startsWith("!message")) return;
 
   if (message.guild.ownerId !== message.author.id) {
@@ -41,7 +54,7 @@ client.on("messageCreate", async (message) => {
   let targetChannel = message.channel;
   let text = args.join(" ");
 
-// If channel mentioned
+  // Channel mentioned
   if (message.mentions.channels.size > 0) {
     targetChannel = message.mentions.channels.first();
     text = args.slice(1).join(" "); 
@@ -57,12 +70,10 @@ client.on("messageCreate", async (message) => {
   }
 });
 
-import express from "express";
-
+// Dummy server
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.get("/", (req, res) => res.send('Bot is running!'));
+app.get("/", (req, res) => res.send("Bot is running!"));
 app.listen(PORT, () => console.log(`🌐 Webserver is running on ${PORT}`));
 
 // Token login
