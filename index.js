@@ -44,20 +44,21 @@ client.on("messageCreate", async (message) => {
   // Message
   if (!message.content.startsWith("!message")) return;
 
-  if (message.guild.ownerId !== message.author.id) {
-    return message.reply("Only the owner of this server can use this command!");
+  if (!message.member.permissions.has("Administrator")) {
+    return message.reply("You must have Administrator permissions to use this command.");
   }
 
-  const args = message.content.slice("!message".length).trim().split(" ");
+  const args = message.content.slice("!message".length).trim();
   if (!args.length) return message.reply("You have to write a message!");
 
   let targetChannel = message.channel;
-  let text = args.join(" ");
+  let ending = " \n\n*This message was triggered automatically by an administrator.*"
+  let text = args+ending;
 
   // Channel mentioned
   if (message.mentions.channels.size > 0) {
     targetChannel = message.mentions.channels.first();
-    text = args.slice(1).join(" "); 
+    text = args+ending.slice(1).join(" "); 
   }
 
   if (!text.length) return message.reply("You have to write a message!");
@@ -74,7 +75,6 @@ client.on("messageCreate", async (message) => {
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.get("/", (req, res) => res.send("Bot is running!"));
-app.listen(PORT, () => console.log(`🌐 Webserver is running on ${PORT}`));
+app.listen(PORT, () => console.log(`Webserver is running on ${PORT}`));
 
-// Token login
 client.login(TOKEN);
